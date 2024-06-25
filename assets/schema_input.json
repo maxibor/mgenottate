@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/maxibor/mgenottate/master/assets/schema_input.json",
+    "title": "maxibor/mgenottate pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id"]
+            },
+            "genome_fa": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "format": "file-path",
+                "errorMessage": "FastA file for genome must be provided, cannot contain spaces and must have extension '.fa.gz' or '.fasta.gz'",
+            }
+        },
+        "required": ["sample", "genome_fa"]
+    }
+}
