@@ -10,7 +10,7 @@ process CONTIG_CONCAT {
     tuple val(meta), path(fasta, stageAs: 'input/*')
 
     output:
-    tuple val(meta), path("*", type: 'file'), emit: fasta
+    tuple val(meta), path("output/*", type: 'file'), emit: fasta
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,6 +20,7 @@ process CONTIG_CONCAT {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    mkdir -p output
     contig_concat.py $fasta
     """
 

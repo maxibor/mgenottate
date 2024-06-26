@@ -23,7 +23,7 @@ def contig_concat(fa):
     genseq = linker.join(genseq)
 
     logging.info(f"Writing {fname}")
-    with open(fname, "w") as out:
+    with open(os.path.join("output",fname), "w") as out:
         out.write(f">{fname}\n")
         for line in textwrap.wrap(genseq, 80):
             out.write(line + "\n")
