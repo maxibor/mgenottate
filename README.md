@@ -2,6 +2,10 @@
 
 # maxibor/mgenottate
 
+**Mgenottate**: (Meta) GENOme ANNOTTATion
+
+>Takes genomes as an input, compute completion/contamination QC metrics with Busco, dereplicates with dREP, and provides a summary table in the end.
+
 ```mermaid
 graph LR
     a[genome fasta]--> b[busco quality assesment]
