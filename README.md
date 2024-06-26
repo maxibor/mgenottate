@@ -1,104 +1,75 @@
-## Introduction
 
-**mgenottate** is a minimal nf-core pipeline containing as few components as possible. The idea is to be as light as possible while maintaining compatibility with nf-core tools such as modules and subworkflows. You could use this as a template to start your own pipeline or explore alternative methods of working with the nf-core template. It is inspired by [kenibrewer/simplenextflow](https://github.com/kenibrewer/simplenextflow) but it has the following differences:
 
-- It is generated using the template and should be compatible with `nf-core sync` for the foreseeable future
-- It uses the `nf-validate` plugin to reduce boilerplate code
-- It removes some additional files such as `docs/`
-- It uses Nextflow code to replace the Java classes in `lib/` (see [the initialise subworkflow](./subworkflows/local/initialise.nf))
-- It uses `results` as a default value for `--outdir` to remove one additional parameter user need to supply
-- It removes email and slack integration for simplicity
-- It removes Github features so developers can add their own
-
-You probably shouldn't use this, it's a good POC for how simple nf-core could be in future. If you think you can simplify it, open a PR!
-
-### Potential simplifications:
-
-- Remove, move or reduce editor files to make the repo look less messy
-- Combine documentation into fewer files to reduce documentation overhead
-- Simplify the contents of the Nextflow code itself
-
-I have adapted Ken Brewer's instructions for cloning his template below but updated them for this repo:
-
-## Template instructions:
-
-### Make your own repo
-
-- [ ] Fork the repo to your own organisation and change the name to something appropriate
-
-### Template Naming
-
-- [ ] Replace all instances of `mgenottate` with the name of your pipeline
-- [ ] Replace all instances of `maxibor` with your GitHub username/organization
-
-### Samplesheet handling
-
-- [ ] Update the `assets/schema_input.json` for your own samplesheet. Use the [nf-validate documentation](https://nextflow-io.github.io/nf-schema/nextflow_schema/sample_sheet_schema_specification/) to guide you.
-
-### Add needed modules/processes
-
-- [ ] Add any needed nf-core modules via the cli command `nf-core modules install`
-- [ ] Add any custom processes to the `modules/local` directory
-- [ ] Add and required software to the `environment.yml` file to be installed via conda or wave containers
-
-### Modify the main workflow
-
-- [ ] Modify the `main.nf` file to add any needed processes
-
-### Documentation
-
-- [ ] Search for `TODO` and replace with your own content
-- [ ] Delete this section of the README
+# maxibor/mgenottate
 
 ## Usage
 
-> **Note**
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
-
-First, prepare a samplesheet with your input data that looks as follows:
-
-`samplesheet.csv`:
-
-```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-```
-
-Now, you can run the pipeline using:
-
 ```bash
-nextflow run maxibor/mgenottate \
-   -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv
+nextflow run maxibor/mgenottate -profile {conda,docker,singularity} --input genome_sheet.csv --busco_db path/to/busco/db --mmseqs2_db_path path/to/mmseqs/db
 ```
 
-> **Warning:**
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
-> provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+## Input/output options                                                                                                            
+                                                                                                                                   
+Define where the pipeline should find input data and save output data.                                                             
+                                                                                                                                   
+| Parameter | Description | Type | Default | Required | Hidden |                                                                   
+|-----------|-----------|-----------|-----------|-----------|-----------|                                                          
+| `input` | Path to comma-separated file containing information about the samples and genomes See below for more infos. | `string` |  | True |  |                                                                             
+| `outdir` | The output directory where the results will be saved. You have to use absolute paths to storage on Cloud                                                                                           
 
-## Credits
 
-maxibor/mgenottate was originally written by Adam Talbot.
+> An example input file can be found in [tests/data/test_samplesheet.csv](tests/data/test_samplesheet.csv)
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+It contains 2 columns, the first one being the sample name to which a genome belog, and the second one the path to a genome in fasta file (compressed or not).
 
-- Ken Brewer (@kenibrewer)
+## Databases                                                                                                                                                                                                                                 
+| Parameter | Description | Type | Default | Required | Hidden |                                                                   
+|-----------|-----------|-----------|-----------|-----------|-----------|                                                          
+| `busco_db` | Path to busco database | `string` |  | True |  |                                                                    
+| `mmseqs2_db_name` | Name of mmseqs prebuilt database (required if not db path is provided) <details><summary>Help</summary><small>See                                  
+https://github.com/soedinglab/MMseqs2/wiki#downloading-databases </small></details>| `string` |  |  |  |                            
+| `mmseqs2_db_path` | Path to mmseqs database (required if no db name is provided)| `string` |  |  |  |                                                                
+                                                                                                                                   
+## Tools options
 
-## Contributions and Support
+| Parameter | Description | Type | Default | Required | Hidden |                                                                   
+|-----------|-----------|-----------|-----------|-----------|-----------|                                                          
+| `busco_mode` | Busco mode <details><summary>Help</summary><small>One of genome, proteins, or transcriptome</small></details>|    
+`string` | genome |  |  |                                                                                                          
+| `busco_lineage` | Busco lineage. auto for automatic lineage selection | `string` | auto |  |  |                                  
+| `drep_ani` | drep secondary clustering ANI threshold | `number` | 0.99 |  |  |                                                   
+| `mmseqs_search_type` | 2 (translated), 3 (nucleotide) or 4 (translated 
+nucleotide backtrace | `integer` | 3 |  |  |                                                        
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+## Max job request options                                                                                                         
+                                                                                                                                   
+Set the top limit for requested resources for any single job.                                                                      
+                                                                                                                                   
+| Parameter | Description | Type | Default | Required | Hidden |                                                                   
+|-----------|-----------|-----------|-----------|-----------|-----------|                                                          
+| `max_cpus` | Maximum number of CPUs that can be requested for any single job. <details><summary>Help</summary><small>Use to set  
+an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`</small></details>| `integer` | 16
+|  | True |                                                                                                                        
+| `max_memory` | Maximum amount of memory that can be requested for any single job. <details><summary>Help</summary><small>Use to  
+set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory   
+'8.GB'`</small></details>| `string` | 128.GB |  | True |                                                                           
+| `max_time` | Maximum amount of time that can be requested for any single job. <details><summary>Help</summary><small>Use to set  
+an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time           
+'2.h'`</small></details>| `string` | 240.h |  | True |                                                                             
+                                                                                                                                   
+## Generic options                                                                                                                 
+                                                                                                                                   
+Less common options for the pipeline, typically set in a config file.                                                              
+                                                                                                                                   
+| Parameter | Description | Type | Default | Required | Hidden |                                                                   
+|-----------|-----------|-----------|-----------|-----------|-----------|                                                          
+| `help` | Display help text. | `boolean` |  |  | True |                                                                           
+| `version` | Display version and exit. | `boolean` |  |  | True |                                                                 
+| `publish_dir_mode` | Method used to save pipeline results to output directory. <details><summary>Help</summary><small>The        
+Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the     
+pipeline what method should be used to move these files. See [Nextflow                                                             
+docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.</small></details>| `string` | copy |  | True |     
+| `monochrome_logs` | Do not use coloured log outputs. | `boolean` |  |  | True |                                                  
+                                                                                                                                   
 
-## Citations
 
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
-
-This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
-
-> **The nf-core framework for community-curated bioinformatics pipelines.**
->
-> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
->
-> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).

@@ -1,10 +1,10 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/maxibor/mgenottate/master/nextflow_schema.json",
     "title": "maxibor/mgenottate pipeline parameters",
     "description": "Minimal nf-core pipeline compatible with template",
     "type": "object",
-    "defs": {
+    "definitions": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -16,18 +16,79 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
+                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
-                    "fa_icon": "fas fa-file-csv",
-                    "schema": "assets/schema_input.json"
+                    "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "default": "results"
+                }
+            }
+        },
+        "databases": {
+            "title": "Databases",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "busco_db": {
+                    "type": "string",
+                    "description": "Path to busco database",
+                    "fa_icon": "fas fa-database",
+                    "format": "path"
+                },
+                "mmseqs2_db_name": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Name of mmseqs prebuilt database",
+                    "help_text": "See https://github.com/soedinglab/MMseqs2/wiki#downloading-databases"
+                },
+                "mmseqs2_db_path": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "format": "path",
+                    "description": "Path to mmseqs database"
+                }
+            },
+            "required": ["busco_db"]
+        },
+        "tools_options": {
+            "title": "Tools options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "busco_mode": {
+                    "type": "string",
+                    "default": "genome",
+                    "help_text": "One of genome, proteins, or transcriptome",
+                    "description": "Busco mode",
+                    "enum": ["genome", "proteins", "transcriptome"]
+                },
+                "busco_lineage": {
+                    "type": "string",
+                    "default": "auto",
+                    "description": "Busco lineage. auto for automatic lineage selection"
+                },
+                "drep_ani": {
+                    "type": "number",
+                    "default": 0.99,
+                    "description": "drep secondary clustering ANI threshold",
+                    "minimum": 0.7,
+                    "maximum": 1
+                },
+                "mmseqs_search_type": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "mmseqs search type",
+                    "help_text": "2 (translated), 3 (nucleotide) or 4 (translated nucleotide backtrace)"
                 }
             }
         },
@@ -99,47 +160,35 @@
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
                     "hidden": true
-                },
-                "validationShowHiddenParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "validationFailUnrecognisedParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "hidden": true,
-                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
-                },
-                "validationLenientMode": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-question-circle",
-                    "description": "Validation of parameters in lenient more.",
-                    "hidden": true,
-                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
-                },
-                "validationSkipDuplicateCheck": {
-                    "type": "boolean",
-                    "description": "Do not check samples are not duplicates of each other.",
-                    "help_text": "Allows samples in the samplesheet to be duplicates of each other.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-clone"
                 }
             }
         }
     },
     "allOf": [
         {
-            "$ref": "#/defs/input_output_options"
+            "$ref": "#/definitions/input_output_options"
         },
         {
-            "$ref": "#/defs/max_job_request_options"
+            "$ref": "#/definitions/databases"
         },
         {
-            "$ref": "#/defs/generic_options"
+            "$ref": "#/definitions/tools_options"
+        },
+        {
+            "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "custom_config_version": {
+            "type": "string",
+            "default": "master"
+        },
+        "custom_config_base": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/configs/master"
+        }
+    }
 }
