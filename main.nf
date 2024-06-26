@@ -43,12 +43,10 @@ workflow MGENOTTATE {
 
     INITIALISE()
 
-    // Setting up database Channels
     ch_busco_db = params.busco_db ? Channel.fromPath(params.busco_db) : []
 
     ch_input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
 
-    // See the documentation https://nextflow-io.github.io/nf-schema/samplesheets/fromSamplesheet/
     ch_input
         .map { 
             meta, genome_fa -> 
@@ -92,25 +90,16 @@ workflow MGENOTTATE {
     }
     .set { ch_busco_summaries }
     
-    ch_genomes.dump(tag: 'ch_genomes', pretty: true)
-
     RESHAPE_DF (
         ch_busco_summaries
     )
-
-    RESHAPE_DF.out.genome_information.dump(tag: 'reshape_df', pretty: true)
-
-    ch_genomes.map { 
-                meta, genome -> 
-                tuple(meta.subMap(['id']), genome)
-            }.groupTuple().dump(tag: 'ch_genomes_groupTuple', pretty: true)
 
     RESHAPE_DF.out.genome_information.join(
             ch_genomes.map { 
                 meta, genome -> 
                 tuple(meta.subMap(['id']), genome)
             }.groupTuple()
-        ).dump(tag: 'busco_join_df', pretty: true)
+        )
 
     DREP_DEREPLICATE (
         RESHAPE_DF.out.genome_information.join(
@@ -121,8 +110,6 @@ workflow MGENOTTATE {
         )
     )
 
-    DREP_DEREPLICATE.out.dereplicated_genomes.dump(tag: 'drep_dereplicated', pretty: true)
-
     CONTIG_CONCAT (
         DREP_DEREPLICATE.out.dereplicated_genomes.transpose()
     )
@@ -130,8 +117,6 @@ workflow MGENOTTATE {
     CAT_CAT (
         CONTIG_CONCAT.out.fasta.groupTuple()
     )
-
-    CONTIG_CONCAT.out.fasta.dump(tag: 'contig_concat', pretty: true)
 
     MMSEQS_CONTIG_TAXONOMY (
         CAT_CAT.out.file_out,
