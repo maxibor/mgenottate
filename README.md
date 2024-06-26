@@ -2,6 +2,14 @@
 
 # maxibor/mgenottate
 
+```mermaid
+graph LR
+    a[genome fasta]--> b[busco quality assesment]
+    b --> c[dRep genome ANI dereplication]
+    c --> d[MMSeqs2 genome taxonomic_annotation]
+    d --> e[Summary table]
+```
+
 ## Usage
 
 ```bash
