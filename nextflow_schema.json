@@ -84,6 +84,12 @@
                     "minimum": 0.7,
                     "maximum": 1
                 },
+                "mmseqs_mem": {
+                    "type": "string",
+                    "default": "14G",
+                    "description": "mmseqs amount of memory",
+                    "help_text": "Amount of Memory for MMseqs2 (in Gb)"
+                },
                 "mmseqs_search_type": {
                     "type": "integer",
                     "default": 3,

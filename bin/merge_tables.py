@@ -9,11 +9,7 @@ def merge_tables(drep_genome_info, mmseqs_taxo, sample_name):
     """
 
     mmseqs = pd.read_table(mmseqs_taxo, names=['genome', 'taxid', 'rank', 'name'], sep='\t')
-    print(mmseqs)
     drep = pd.read_csv(drep_genome_info)
-    print(drep.dtypes)
-    print(mmseqs.dtypes)
-
     merged = mmseqs.merge(drep, on='genome', how='inner')
 
     merged.to_csv(f"{sample_name}_mgenottate_info.csv", sep=',', index=False)

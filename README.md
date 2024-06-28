@@ -38,10 +38,11 @@ It contains 2 columns, the first one being the sample name to which a genome bel
 | Parameter | Description | Type | Default | Required | Hidden |                                                                   
 |-----------|-----------|-----------|-----------|-----------|-----------|                                                          
 | `busco_db` | Path to busco database | `string` |  | True |  |                                                                    
-| `mmseqs2_db_name` | Name of mmseqs prebuilt database (required if not db path is provided) <details><summary>Help</summary><small>See                                  
-https://github.com/soedinglab/MMseqs2/wiki#downloading-databases </small></details>| `string` |  |  |  |                            
+| `mmseqs2_db_name` | Name of mmseqs prebuilt database (required if not db path is provided)  | `string` |  |  |  |                            
 | `mmseqs2_db_path` | Path to mmseqs database (required if no db name is provided)| `string` |  |  |  |                                                                
-                                                                                                                                   
+
+> See [MMSeqs2 wiki](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases) for valid MMSeqs DB names.
+
 ## Tools options
 
 | Parameter | Description | Type | Default | Required | Hidden |                                                                   
@@ -49,9 +50,9 @@ https://github.com/soedinglab/MMseqs2/wiki#downloading-databases </small></detai
 | `busco_mode` | Busco mode <details><summary>Help</summary><small>One of genome, proteins, or transcriptome</small></details>|    
 `string` | genome |  |  |                                                                                                          
 | `busco_lineage` | Busco lineage. auto for automatic lineage selection | `string` | auto |  |  |                                  
-| `drep_ani` | drep secondary clustering ANI threshold | `number` | 0.99 |  |  |                                                   
-| `mmseqs_search_type` | 2 (translated), 3 (nucleotide) or 4 (translated 
-nucleotide backtrace | `integer` | 3 |  |  |                                                        
+| `drep_ani` | drep secondary clustering ANI threshold | `number` | 0.99 |  |  |
+| `mmseqs_mem` | Amount of memory for MMSeqs2 (in Gb) | `string` | '14G' |  |  |                                                       
+| `mmseqs_search_type` | 2 (translated), 3 (nucleotide) or 4 (translated nucleotide backtrace) | `integer` | 3 |  |  |                                                        
 
 ## Max job request options                                                                                                         
                                                                                                                                    
