@@ -51,8 +51,8 @@ It contains 2 columns, the first one being the sample name to which a genome bel
 `string` | genome |  |  |                                                                                                          
 | `busco_lineage` | Busco lineage. auto for automatic lineage selection | `string` | auto |  |  |                                  
 | `drep_ani` | drep secondary clustering ANI threshold | `number` | 0.99 |  |  |
-| `mmseqs_mem` | Amount of memory for MMSeqs2 (in Gb) | `string` | '14G' |  |  |                                                       
-| `mmseqs_search_type` | 2 (translated), 3 (nucleotide) or 4 (translated nucleotide backtrace) | `integer` | 3 |  |  |                                                        
+| `mmseqs2_mem` | Amount of memory for MMSeqs2 (in Gb) | `string` | '14G' |  |  |                                                       
+| `mmseqs2_search_type` | 2 (translated), 3 (nucleotide) or 4 (translated nucleotide backtrace) | `integer` | null(auto) |  |  |                                                        
 
 ## Max job request options                                                                                                         
                                                                                                                                    
