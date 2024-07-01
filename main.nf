@@ -43,7 +43,7 @@ workflow MGENOTTATE {
 
     INITIALISE()
 
-    ch_busco_db = params.busco_db ? Channel.fromPath(params.busco_db) : []
+    ch_busco_db = params.busco_db ? Channel.fromPath(params.busco_db).first() : []
 
     ch_input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
 
@@ -79,37 +79,28 @@ workflow MGENOTTATE {
     )
 
     BUSCO_BUSCO.out.batch_summary
-        .collectFile(keepHeader: true) {
+        .splitCsv(skip: 1, sep: '\t')
+        .map {meta, busco -> [meta, "${busco[0]},${busco[2]},${busco[4]}"] }
+        .collectFile(newLine: true, seed: "genome,completeness,contamination"){
             meta, busco_summary -> 
                 ["${meta.id}.busco_summary.tsv", busco_summary]
         }
+        .map {
+            it -> [['id': it.simpleName], it]
+        }
         .set { ch_busco_summaries }
-
-    ch_busco_summaries.map {
-        it -> [['id': it.simpleName], it]
-    }
-    .set { ch_busco_summaries }
     
-    RESHAPE_DF (
-        ch_busco_summaries
-    )
-
-    RESHAPE_DF.out.genome_information.join(
-            ch_genomes.map { 
-                meta, genome -> 
-                tuple(meta.subMap(['id']), genome)
-            }.groupTuple()
-        )
 
     DREP_DEREPLICATE (
-        RESHAPE_DF.out.genome_information.join(
+        ch_busco_summaries.join(
             ch_genomes.map { 
                 meta, genome -> 
                 tuple(meta.subMap(['id']), genome)
             }.groupTuple()
         )
     )
-
+    
+    
     CONTIG_CONCAT (
         DREP_DEREPLICATE.out.dereplicated_genomes.transpose()
     )
