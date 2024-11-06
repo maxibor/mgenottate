@@ -22,17 +22,24 @@ def merge_tables(drep_genome_info, cdb, sdb, mmseqs_taxo, sample_name):
         ] # see https://github.com/soedinglab/MMseqs2/wiki#taxonomy-output-and-tsv
     cdb = pd.read_csv(cdb)
     sdb = pd.read_csv(sdb)
-    mmseqs = pd.read_table(mmseqs_taxo, sep='\t', header=None)
-    if mmseqs.shape[1] == 4:
-        mmseqs.columns = format_4_cols
-    elif mmseqs.shape[1] == 8:
-        mmseqs.columns = format_8_cols
-    merged = (
-        drep
-        .merge(cdb, on='genome', how='outer')
-        .merge(sdb, on='genome', how='outer')
-        .merge(mmseqs, on='genome', how='outer')
-    )
+    if mmseqs_taxo:
+        mmseqs = pd.read_table(mmseqs_taxo, sep='\t', header=None)
+        if mmseqs.shape[1] == 4:
+            mmseqs.columns = format_4_cols
+        elif mmseqs.shape[1] == 8:
+            mmseqs.columns = format_8_cols
+        merged = (
+            drep
+            .merge(cdb, on='genome', how='outer')
+            .merge(sdb, on='genome', how='outer')
+            .merge(mmseqs, on='genome', how='outer')
+        )
+    else:
+        merged = (
+            drep
+            .merge(cdb, on='genome', how='outer')
+            .merge(sdb, on='genome', how='outer')
+        )
     cluster_rep = (
         merged
         .groupby("secondary_cluster")

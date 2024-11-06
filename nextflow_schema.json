@@ -44,6 +44,11 @@
                     "fa_icon": "fas fa-database",
                     "format": "path"
                 },
+                "skip_tax_annotation" : {
+                    "type": "boolean",
+                    "description": "Skip taxonomic annotation",
+                    "default": false
+                },
                 "mmseqs2_db_name": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
