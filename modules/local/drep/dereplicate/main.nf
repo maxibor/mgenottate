@@ -15,6 +15,8 @@ process DREP_DEREPLICATE {
     tuple val(meta), path("data_tables/*.csv"), emit: csv
     tuple val(meta), path("dereplicated_genomes/*"), emit: dereplicated_genomes
     tuple val(meta), path("data_tables/genomeInfo.csv"), emit: genomeInfo
+    tuple val(meta), path("data_tables/Sdb.csv"), emit: sdb
+    tuple val(meta), path("data_tables/Cdb.csv"), emit: cdb
     path "versions.yml"           , emit: versions
 
     when:

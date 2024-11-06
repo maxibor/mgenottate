@@ -8,7 +8,7 @@ process MERGE_TABLES {
         'biocontainers/pandas:2.2.1' }"
 
     input:
-    tuple val(meta), path(drep_genome_info), path(mmseqs)
+    tuple val(meta), path(drep_genome_info), path(sdb), path(cdb), path(mmseqs)
 
     output:
     tuple val(meta), path("*_mgenottate_info.csv")   , emit: summary_table
@@ -20,8 +20,10 @@ process MERGE_TABLES {
     """
     merge_tables.py \\
         --drep_genome_info ${drep_genome_info} \\
-        --mmseqs ${mmseqs} \\
-        --sample_name ${meta.id}
+        --sample_name ${meta.id} \\
+        --sdb $sdb \\
+        --cdb $cdb \\
+        --mmseqs_taxo ${mmseqs} 
     """
 
     stub:
