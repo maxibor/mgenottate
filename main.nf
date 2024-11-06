@@ -117,6 +117,10 @@ workflow MGENOTTATE {
 
     MERGE_TABLES(
         DREP_DEREPLICATE.out.genomeInfo.join(
+            DREP_DEREPLICATE.out.sdb
+        ).join(
+            DREP_DEREPLICATE.out.cdb
+        ).join(
             MMSEQS_CONTIG_TAXONOMY.out.taxonomy
         )
     )

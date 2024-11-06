@@ -29,9 +29,9 @@ def merge_tables(drep_genome_info, cdb, sdb, mmseqs_taxo, sample_name):
         mmseqs.columns = format_8_cols
     merged = (
         drep
-        .merge(cdb, on='genome', how='inner')
-        .merge(sdb, on='genome', how='inner')
-        .merge(mmseqs, on='genome', how='inner')
+        .merge(cdb, on='genome', how='outer')
+        .merge(sdb, on='genome', how='outer')
+        .merge(mmseqs, on='genome', how='outer')
     )
     cluster_rep = (
         merged
