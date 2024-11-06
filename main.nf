@@ -108,7 +108,8 @@ workflow MGENOTTATE {
     CAT_CAT (
         CONTIG_CONCAT.out.fasta.groupTuple()
     )
-    if (params.skip_tax_annotation) {
+
+    if (params.skip_tax_annotation == false) {
         MMSEQS_CONTIG_TAXONOMY (
             CAT_CAT.out.file_out,
             params.mmseqs2_db_path,
@@ -119,8 +120,7 @@ workflow MGENOTTATE {
         tax_annot = CAT_CAT.out.file_out.map { 
             meta, genome -> [meta, []]
         }
-    }
-    
+    }    
 
     MERGE_TABLES(
         DREP_DEREPLICATE.out.genomeInfo.join(
@@ -128,7 +128,7 @@ workflow MGENOTTATE {
         ).join(
             DREP_DEREPLICATE.out.cdb
         ).join(
-            MMSEQS_CONTIG_TAXONOMY.out.taxonomy
+            tax_annot
         )
     )
 }

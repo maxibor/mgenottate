@@ -38,6 +38,7 @@ It contains 2 columns, the first one being the sample name to which a genome bel
 | Parameter | Description | Type | Default | Required | Hidden |                                                                   
 |-----------|-----------|-----------|-----------|-----------|-----------|                                                          
 | `busco_db` | Path to busco database | `string` |  | True |  |                                                                    
+| `skip_tax_annotation` | Skip taxonomic annotation | `bool` | False | False |  |      
 | `mmseqs2_db_name` | Name of mmseqs prebuilt database (required if not db path is provided)  | `string` |  |  |  |                            
 | `mmseqs2_db_path` | Path to mmseqs database (required if no db name is provided)| `string` |  |  |  |                                                                
 

@@ -18,12 +18,18 @@ process MERGE_TABLES {
 
     script:
     """
+    if [ ! -s ${mmseqs} ] ; then
+        echo "No mmseqs file found, skipping taxonomic annotation"
+    else
+        cat ${mmseqs} > ${meta.id}_mmseqs_db.csv
+    fi
+
     merge_tables.py \\
         --drep_genome_info ${drep_genome_info} \\
         --sample_name ${meta.id} \\
         --sdb $sdb \\
         --cdb $cdb \\
-        --mmseqs_taxo ${mmseqs} 
+        --mmseqs_taxo ${meta.id}_mmseqs_db.csv
     """
 
     stub:
