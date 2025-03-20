@@ -22,22 +22,22 @@
                     },
                     "mmseqs/createdb": {
                         "branch": "master",
-                        "git_sha": "18a43d316b6fd683dc2346867b42882b99811cfd",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["mmseqs_contig_taxonomy"]
                     },
                     "mmseqs/createtsv": {
                         "branch": "master",
-                        "git_sha": "5d849d54f06174c3313eb50c776d4916912db16b",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["mmseqs_contig_taxonomy"]
                     },
                     "mmseqs/databases": {
                         "branch": "master",
-                        "git_sha": "151460db852d636979d9ff3ee631e2268060d4c3",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["mmseqs_contig_taxonomy"]
                     },
                     "mmseqs/taxonomy": {
                         "branch": "master",
-                        "git_sha": "8455be677998258bf40ab3be550c6a96f456cc23",
+                        "git_sha": "2dc4c0474a77f5f8709eb970d890ad102e92af6f",
                         "installed_by": ["mmseqs_contig_taxonomy"]
                     }
                 }
@@ -46,7 +46,7 @@
                 "nf-core": {
                     "mmseqs_contig_taxonomy": {
                         "branch": "master",
-                        "git_sha": "f6ef5cead8ec97111c3032e024d547ae9d7ae916",
+                        "git_sha": "0e9cb409c32d3ec4f0d3804588e4778971c09b7e",
                         "installed_by": ["subworkflows"]
                     }
                 }

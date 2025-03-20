@@ -41,8 +41,15 @@ workflow MMSEQS_CONTIG_TAXONOMY {
     ch_versions               = ch_versions.mix( MMSEQS_TAXONOMY.out.versions )
     ch_taxonomy_querydb_taxdb = MMSEQS_TAXONOMY.out.db_taxonomy
 
+    ch_taxonomy_input_for_createtsv = ch_taxonomy_querydb
+        .join(MMSEQS_TAXONOMY.out.db_taxonomy)
+        .multiMap { meta, db, db_taxonomy ->
+            db: [ meta,db ]
+            taxdb: [ meta, db_taxonomy ]
+        }
+
     // MMSEQS_CREATETSV
-    MMSEQS_CREATETSV ( ch_taxonomy_querydb_taxdb, [[:],[]], ch_taxonomy_querydb )
+    MMSEQS_CREATETSV ( ch_taxonomy_input_for_createtsv.taxdb, [[:],[]], ch_taxonomy_input_for_createtsv.db )
     ch_versions     = ch_versions.mix( MMSEQS_CREATETSV.out.versions )
     ch_taxonomy_tsv = MMSEQS_CREATETSV.out.tsv
 
@@ -53,4 +60,3 @@ workflow MMSEQS_CONTIG_TAXONOMY {
     db_contig   = ch_taxonomy_querydb       // channel: [ val(meta), db ]
     versions    = ch_versions               // channel: [ versions.yml ]
 }
-
