@@ -75,6 +75,7 @@ workflow MGENOTTATE {
         params.busco_mode,
         params.busco_lineage,
         ch_busco_db,
+        [],
         []
     )
 
