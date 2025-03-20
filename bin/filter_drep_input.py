@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def clean_input(busco_in, busco_out, genomes_out):
-    pres_genomes = [i.name for i in Path(".").glob("*.fa")]
+    pres_genomes = [i.name for i in list(Path(".").glob("*.fa")) + list(Path(".").glob("*.fna"))]
     df = pd.read_csv(busco_in)
     df.query("genome in @pres_genomes").to_csv(busco_out, index=False)
 
