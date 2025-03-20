@@ -26,14 +26,20 @@ process DREP_DEREPLICATE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
+
+    filter_drep_input.py \\
+        --busco_sum_in $genomeInfo \\
+        --busco_sum_out ${prefix}.busco_summary_clean.csv \\
+        --genomes_out ${prefix}_genomes.txt
+
     dRep \\
         dereplicate \\
         ./ \\
         --processors $task.cpus \\
-        --genomeInfo $genomeInfo \\
-        --genomes $genomes \\
-        $args 
-        
+        --genomeInfo ${prefix}.busco_summary_clean.csv \\
+        --genomes ${prefix}_genomes.txt \\
+        $args
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
